@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/newAnimalName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:hint="@string/animal_name_placeholder"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        android:inputType="textCapCharacters"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/newAnimalAge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        android:hint="@string/animal_age_placeholder"
+        android:inputType="number"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/newAnimalName"
+        app:layout_constraintBottom_toTopOf="@+id/newAnimalBreed" />
+
+    <EditText
+        android:id="@+id/newAnimalBreed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center"
+        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+        android:inputType="textCapCharacters"
+        app:layout_constraintTop_toBottomOf="@+id/newAnimalAge"
+        app:layout_constraintBottom_toTopOf="@+id/addAnimalButton"
+        android:hint="@string/animal_breed_placeholder"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/addAnimalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:text="@string/add_new_animal_button_text"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/newAnimalBreed"
+        android:layout_marginTop="32dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

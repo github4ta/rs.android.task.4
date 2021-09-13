@@ -1,10 +1,10 @@
-package tsarik.sergei.storage.filter
+package tsarik.sergei.storage.sort
 
 import android.os.Bundle
 import androidx.preference.PreferenceFragmentCompat
 import tsarik.sergei.storage.R
 
-class FilterAnimalPreferenceFragment : PreferenceFragmentCompat() {
+class SortAnimalPreferenceFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         return

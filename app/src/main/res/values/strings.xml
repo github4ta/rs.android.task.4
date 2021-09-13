@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Animals Storage</string>
+    <string name="animal_name_placeholder">Name:</string>
+    <string name="animal_age_placeholder">Age:</string>
+    <string name="animal_breed_placeholder">Breed:</string>
+    <string name="add_new_animal_button_text">Add animal</string>
+</resources>
