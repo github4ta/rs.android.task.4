@@ -4,4 +4,6 @@
     <string name="animal_age_placeholder">Age:</string>
     <string name="animal_breed_placeholder">Breed:</string>
     <string name="add_new_animal_button_text">Add animal</string>
+    <string name="update_animal_button_text">Update animal</string>
+    <string name="delete_animal_button_text">Delete animal</string>
 </resources>
