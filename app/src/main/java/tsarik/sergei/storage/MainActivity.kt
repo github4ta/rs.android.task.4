@@ -16,6 +16,12 @@ import tsarik.sergei.storage.db.AnimalsListAdapter
 import tsarik.sergei.storage.sort.SortAnimalActivity
 
 class MainActivity : AppCompatActivity() {
+
+    private var animalsArrayId = mutableListOf<String>()
+    private var animalsArrayName = mutableListOf<String>()
+    private var animalsArrayAge = mutableListOf<String>()
+    private var animalsArrayBreed = mutableListOf<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,7 +35,10 @@ class MainActivity : AppCompatActivity() {
                 parent, view, position, id ->
             // val selectedItem = parent.getItemAtPosition(position)
             val intent = Intent(this, UpdateDeleteAnimalActivity::class.java)
-            intent.putExtra("selectedItemId", id)
+            intent.putExtra("selectedItemId", animalsArrayId[id.toInt()])
+            intent.putExtra("selectedItemName", animalsArrayName[id.toInt()])
+            intent.putExtra("selectedItemAge", animalsArrayAge[id.toInt()])
+            intent.putExtra("selectedItemBreed", animalsArrayBreed[id.toInt()])
             startActivity(intent)
         }
 
@@ -69,15 +78,15 @@ class MainActivity : AppCompatActivity() {
     private fun viewRecords(){
         val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
         val animals: List<AnimalModel> = databaseHandler.readAllDataFromDb()
-        val animalsArrayId = Array<String>(animals.size){"0"}
-        val animalsArrayName = Array<String>(animals.size){"null"}
-        val animalsArrayAge = Array<String>(animals.size){"0"}
-        val animalsArrayBreed = Array<String>(animals.size){"null"}
+        animalsArrayId = mutableListOf<String>()
+        animalsArrayName = mutableListOf<String>()
+        animalsArrayAge = mutableListOf<String>()
+        animalsArrayBreed = mutableListOf<String>()
         for((index, animal) in animals.withIndex()){
-            animalsArrayId[index] = animal.id.toString()
-            animalsArrayName[index] = animal.name
-            animalsArrayAge[index] = animal.age.toString()
-            animalsArrayBreed[index] = animal.breed
+            animalsArrayId.add(index, animal.id.toString())
+            animalsArrayName.add(index, animal.name)
+            animalsArrayAge.add(index, animal.age.toString())
+            animalsArrayBreed.add(index, animal.breed)
         }
         //creating custom ArrayAdapter
         val animalsListAdapter = AnimalsListAdapter(this, animalsArrayName, animalsArrayAge, animalsArrayBreed)

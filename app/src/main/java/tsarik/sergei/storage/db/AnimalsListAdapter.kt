@@ -9,9 +9,9 @@ import tsarik.sergei.storage.R
 
 class AnimalsListAdapter(
     private val context: Activity,
-    private val name: Array<String>,
-    private val age: Array<String>,
-    private val breed: Array<String>
+    private val name: List<String>,
+    private val age: List<String>,
+    private val breed: List<String>
 ) : ArrayAdapter<String>(context, R.layout.animal_item, name) {
 
     override fun getView(position: Int, view: View?, parent: ViewGroup): View {
