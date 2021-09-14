@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         recycler.onItemClickListener = AdapterView.OnItemClickListener {
                 parent, view, position, id ->
-            // val selectedItem = parent.getItemAtPosition(position)
             val intent = Intent(this, UpdateDeleteAnimalActivity::class.java)
             intent.putExtra("selectedItemId", animalsArrayId[id.toInt()])
             intent.putExtra("selectedItemName", animalsArrayName[id.toInt()])

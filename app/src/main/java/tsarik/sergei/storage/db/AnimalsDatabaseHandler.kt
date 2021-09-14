@@ -58,11 +58,37 @@ class AnimalsDatabaseHandler(context: Context) :
         return rowID
     }
 
+    fun deleteAnimal(row_id: String): Boolean {
+        var isDeleted = false
+        val db = this.writableDatabase
+        val result = db.delete(TABLE_ANIMALS,"$KEY_ID=?", arrayOf(row_id))
+        if (result == -1) {
+        } else {
+            isDeleted = true
+        }
+        return isDeleted
+    }
+
+    fun updateAnimal(animal: AnimalModel): Boolean {
+        var isUpdated = false
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(KEY_NAME, animal.name)
+        contentValues.put(KEY_AGE, animal.age)
+        contentValues.put(KEY_BREED, animal.breed)
+        val result = db.update(TABLE_ANIMALS, contentValues, "$KEY_ID=?", arrayOf(animal.id))
+        if (result == -1) {
+        } else {
+            isUpdated = true
+        }
+        return isUpdated
+    }
+
     private fun populateTableWithAnimals() {
         var breed = 0
         for (i in 1..10) {
             breed = i / 3
-            addAnimal(AnimalModel(i,"Animal$i", i, "Breed$breed"))
+            addAnimal(AnimalModel(i.toString(),"Animal$i", i.toString(), "Breed$breed"))
         }
     }
 
@@ -78,15 +104,15 @@ class AnimalsDatabaseHandler(context: Context) :
             db.execSQL(selectQuery)
             return ArrayList()
         }
-        var id: Int
+        var id: String
         var name: String
-        var age: Int
+        var age: String
         var breed: String
         if (cursor.moveToFirst()) {
             do {
-                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID)).toString()
                 name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
-                age = cursor.getInt(cursor.getColumnIndex(KEY_AGE))
+                age = cursor.getString(cursor.getColumnIndex(KEY_AGE))
                 breed = cursor.getString(cursor.getColumnIndex(KEY_BREED))
                 val animal = AnimalModel(id = id, name = name, age = age, breed = breed)
                 animals.add(animal)

@@ -20,10 +20,10 @@ class AddNewAnimalActivity : AppCompatActivity() {
             val animalBreedView: TextView = findViewById(R.id.newAnimalBreed)
 
             val animalName = animalNameView.text.toString()
-            val animalAge = animalAgeView.text.toString().toInt()
+            val animalAge = animalAgeView.text.toString()
             val animalBreed = animalBreedView.text.toString()
 
-            var animal: AnimalModel = AnimalModel(0, animalName, animalAge, animalBreed)
+            var animal: AnimalModel = AnimalModel("0", animalName, animalAge, animalBreed)
 
             val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
             databaseHandler.addAnimal2(animal)
