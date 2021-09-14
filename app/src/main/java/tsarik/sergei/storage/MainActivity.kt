@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,6 +22,14 @@ class MainActivity : AppCompatActivity() {
 
         addNewAnimalButton.setOnClickListener {
             val intent = Intent(this, AddNewAnimalActivity::class.java)
+            startActivity(intent)
+        }
+
+        recycler.onItemClickListener = AdapterView.OnItemClickListener {
+                parent, view, position, id ->
+            // val selectedItem = parent.getItemAtPosition(position)
+            val intent = Intent(this, UpdateDeleteAnimalActivity::class.java)
+            intent.putExtra("selectedItemId", id)
             startActivity(intent)
         }
 
