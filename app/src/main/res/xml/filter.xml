@@ -1,27 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:title="Name"
-        android:summary="Sort by Name"
-        android:key="sort_by_name"
-        android:defaultValue="true"
-        />
-    <CheckBoxPreference
-        android:title="Age"
-        android:summary="Sort by Age"
-        android:key="sort_by_age"
-        android:defaultValue="false"
-        />
-    <CheckBoxPreference
-        android:title="Breed"
-        android:summary="Sort by Breed"
-        android:key="sort_by_breed"
-        android:defaultValue="false"
-        />
 
     <ListPreference
         android:title="Sort animals"
-        android:summary="Select the kind of data that you would like to sort"
+        android:summary="Click to select the kind of data that you would like to sort"
         android:key="downloadType"
         android:defaultValue="1"
         android:entries="@array/listArray"

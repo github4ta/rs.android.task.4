@@ -67,11 +67,39 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-//        textView1.text = prefs.getBoolean("sort_by_name", false).toString()
-//        textView2.text = prefs.getBoolean("sort_by_age", false).toString()
-//        textView3.text = prefs.getBoolean("sort_by_breed", false).toString()
-//        textView4.text = prefs.getString("downloadType", "0")
+        val sortBy = prefs.getString("downloadType", "0")
+        when(sortBy) {
+            "1" -> println("Sort by name")
+            "2" -> println("Sort by age")
+            "3" -> println("Sort by breed")
+            else -> println("Default")
+        }
         super.onResume()
+    }
+
+    private fun viewRecordsSortedBy(column: String) {
+        val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
+        val animals: List<AnimalModel> = databaseHandler.readAllDataFromDb()
+
+        when(column) {
+            "1" -> animals.sortedBy { it.name }
+            "2" -> animals.sortedBy { it.age }
+            "3" -> animals.sortedBy { it.breed }
+            else -> println("Default")
+        }
+
+        animalsArrayName = mutableListOf<String>()
+        animalsArrayAge = mutableListOf<String>()
+        animalsArrayBreed = mutableListOf<String>()
+        for((index, animal) in animals.withIndex()){
+            animalsArrayId.add(index, animal.id.toString())
+            animalsArrayName.add(index, animal.name)
+            animalsArrayAge.add(index, animal.age.toString())
+            animalsArrayBreed.add(index, animal.breed)
+        }
+        //creating custom ArrayAdapter
+        val animalsListAdapter = AnimalsListAdapter(this, animalsArrayName, animalsArrayAge, animalsArrayBreed)
+        recycler.adapter = animalsListAdapter
     }
 
     private fun viewRecords(){
