@@ -7,21 +7,14 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.database.sqlite.SQLiteOpenHelper
+import tsarik.sergei.storage.utils.Utils
+import kotlin.random.Random
 
 class AnimalsDatabaseHandler(context: Context) :
     SQLiteOpenHelper(context, DATABASE_ANIMALS, null, DATABASE_VERSION) {
-    companion object {
-        private const val DATABASE_VERSION = 1
-        private const val DATABASE_ANIMALS = "AnimalsDatabase"
-        private const val TABLE_ANIMALS = "AnimalsTable"
-        private const val KEY_ID = "id"
-        private const val KEY_NAME = "name"
-        private const val KEY_AGE = "age"
-        private const val KEY_BREED = "breed"
-    }
 
     private lateinit var db: SQLiteDatabase
-    private lateinit var context: Context // используется для отображения toast
+    private lateinit var context: Context
 
     override fun onCreate(db: SQLiteDatabase) {
         this.db = db
@@ -30,7 +23,7 @@ class AnimalsDatabaseHandler(context: Context) :
                 + KEY_AGE + " INTEGER," + KEY_BREED + " TEXT" + ")")
         db.execSQL(CREATE_ANIMALS_TABLE)
 
-        populateTableWithAnimals()
+        populateTableWithAnimals(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -39,7 +32,7 @@ class AnimalsDatabaseHandler(context: Context) :
         onCreate(db)
     }
 
-    fun addAnimal(animal: AnimalModel): Long {
+    fun addAnimal(animal: AnimalModel, db: SQLiteDatabase): Long {
         val contentValues = ContentValues()
         contentValues.put(KEY_NAME, animal.name)
         contentValues.put(KEY_AGE, animal.age)
@@ -50,12 +43,7 @@ class AnimalsDatabaseHandler(context: Context) :
 
     fun addAnimal2(animal: AnimalModel): Long {
         val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(KEY_NAME, animal.name)
-        contentValues.put(KEY_AGE, animal.age)
-        contentValues.put(KEY_BREED, animal.breed)
-        val rowID = db.insert(TABLE_ANIMALS, null, contentValues)
-        return rowID
+        return addAnimal(animal, db)
     }
 
     fun deleteAnimal(row_id: String): Boolean {
@@ -84,11 +72,17 @@ class AnimalsDatabaseHandler(context: Context) :
         return isUpdated
     }
 
-    private fun populateTableWithAnimals() {
-        var breed = 0
-        for (i in 1..10) {
-            breed = i / 3
-            addAnimal(AnimalModel(i.toString(),"Animal$i", i.toString(), "Breed$breed"))
+    private fun populateTableWithAnimals(db: SQLiteDatabase) {
+        for (i in 1..12) {
+            addAnimal(
+                AnimalModel(
+                    i.toString(),
+                    Utils.generateString(7),
+                    Random.nextInt(1, 5).toString(),
+                    Utils.generateString(10)
+                ),
+                db
+            )
         }
     }
 
@@ -119,5 +113,15 @@ class AnimalsDatabaseHandler(context: Context) :
             } while (cursor.moveToNext())
         }
         return animals
+    }
+
+    companion object {
+        private const val DATABASE_VERSION = 1
+        private const val DATABASE_ANIMALS = "AnimalsDatabase"
+        private const val TABLE_ANIMALS = "AnimalsTable"
+        private const val KEY_ID = "id"
+        private const val KEY_NAME = "name"
+        private const val KEY_AGE = "age"
+        private const val KEY_BREED = "breed"
     }
 }

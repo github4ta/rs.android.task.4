@@ -4,7 +4,7 @@
     <ListPreference
         android:title="Sort animals"
         android:summary="Click to select the kind of data that you would like to sort"
-        android:key="downloadType"
+        android:key="sortByColumn"
         android:defaultValue="1"
         android:entries="@array/listArray"
         android:entryValues="@array/listValues" />

@@ -8,26 +8,30 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_update_delete_animal.*
 import tsarik.sergei.storage.db.AnimalModel
 import tsarik.sergei.storage.db.AnimalsDatabaseHandler
+import java.util.*
 
 class UpdateDeleteAnimalActivity : AppCompatActivity() {
 
     private lateinit var animal: AnimalModel
+    private lateinit var animalNameView: TextView
+    private lateinit var animalAgeView: TextView
+    private lateinit var animalBreedView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_update_delete_animal)
 
-        val animalNameView: TextView = findViewById(R.id.updatedAnimalName)
-        val animalAgeView: TextView = findViewById(R.id.updatedAnimalAge)
-        val animalBreedView: TextView = findViewById(R.id.updatedAnimalBreed)
+        animalNameView = findViewById(R.id.updatedAnimalName)
+        animalAgeView = findViewById(R.id.updatedAnimalAge)
+        animalBreedView = findViewById(R.id.updatedAnimalBreed)
 
         val intentExtras = intent.extras
         if (intentExtras != null) {
             animal = AnimalModel(
-                intentExtras.getString("selectedItemId").toString(),
-                intentExtras.getString("selectedItemName").toString(),
-                intentExtras.getString("selectedItemAge").toString(),
-                intentExtras.getString("selectedItemBreed").toString()
+                intentExtras.getString(Extras.ID.name).toString(),
+                intentExtras.getString(Extras.NAME.name).toString(),
+                intentExtras.getString(Extras.AGE.name).toString(),
+                intentExtras.getString(Extras.BREED.name).toString()
             )
         }
 
@@ -46,16 +50,11 @@ class UpdateDeleteAnimalActivity : AppCompatActivity() {
         }
 
         updateAnimalButton.setOnClickListener {
-            val animalNameView: TextView = findViewById(R.id.updatedAnimalName)
-            val animalAgeView: TextView = findViewById(R.id.updatedAnimalAge)
-            val animalBreedView: TextView = findViewById(R.id.updatedAnimalBreed)
-
-            animal.name = animalNameView.text.toString()
+            animal.name = animalNameView.text.toString().lowercase(Locale.getDefault()).replaceFirstChar { it.uppercase() }
             animal.age = animalAgeView.text.toString()
-            animal.breed = animalBreedView.text.toString()
+            animal.breed = animalBreedView.text.toString().lowercase(Locale.getDefault()).replaceFirstChar { it.uppercase() }
 
             val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
-
             if (!databaseHandler.updateAnimal(animal)) {
                 Toast.makeText(this, "Failed to Update.", Toast.LENGTH_SHORT).show()
             } else {

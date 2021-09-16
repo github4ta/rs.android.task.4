@@ -26,9 +26,6 @@ class AnimalsListAdapter(
         ageText.text = "Age: ${age[position]}"
         breedText.text = "Breed: ${breed[position]}"
 
-
         return rowView
     }
-
-
 }

@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.AdapterView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,17 +32,14 @@ class MainActivity : AppCompatActivity() {
         recycler.onItemClickListener = AdapterView.OnItemClickListener {
                 parent, view, position, id ->
             val intent = Intent(this, UpdateDeleteAnimalActivity::class.java)
-            intent.putExtra("selectedItemId", animalsArrayId[id.toInt()])
-            intent.putExtra("selectedItemName", animalsArrayName[id.toInt()])
-            intent.putExtra("selectedItemAge", animalsArrayAge[id.toInt()])
-            intent.putExtra("selectedItemBreed", animalsArrayBreed[id.toInt()])
+            intent.putExtra(Extras.ID.name, animalsArrayId[id.toInt()])
+            intent.putExtra(Extras.NAME.name, animalsArrayName[id.toInt()])
+            intent.putExtra(Extras.AGE.name, animalsArrayAge[id.toInt()])
+            intent.putExtra(Extras.BREED.name, animalsArrayBreed[id.toInt()])
             startActivity(intent)
         }
-
-        viewRecords() // происходит обращение к БД и вывод данных в список
     }
 
-    // за что отвечает onActivityResult ?
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1) {
@@ -67,56 +62,64 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val sortBy = prefs.getString("downloadType", "0")
-        when(sortBy) {
-            "1" -> println("Sort by name")
-            "2" -> println("Sort by age")
-            "3" -> println("Sort by breed")
-            else -> println("Default")
-        }
+        var sortByColumn = prefs.getString("sortByColumn", "0").toString()
+        viewRecordsSortedBy(sortByColumn)
         super.onResume()
     }
 
     private fun viewRecordsSortedBy(column: String) {
-        val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
-        val animals: List<AnimalModel> = databaseHandler.readAllDataFromDb()
+        var animals: List<AnimalModel> = getAnimalsFromDb()
+        animals = sortAnimalsByColumn(column, animals)
+        dataProcessing(animals)
+        setDataToView()
+    }
 
-        when(column) {
-            "1" -> animals.sortedBy { it.name }
-            "2" -> animals.sortedBy { it.age }
-            "3" -> animals.sortedBy { it.breed }
-            else -> println("Default")
+    private fun sortAnimalsByColumn(
+        sortByColumn: String,
+        animals: List<AnimalModel>
+    ): List<AnimalModel> {
+        return when (sortByColumn) {
+            SORT_BY_NAME -> animals.sortedBy { it.name }
+            SORT_BY_AGE -> animals.sortedBy { it.age }
+            SORT_BY_BREED -> animals.sortedBy { it.breed }
+            else -> animals.sortedBy { it.id }
         }
-
-        animalsArrayName = mutableListOf<String>()
-        animalsArrayAge = mutableListOf<String>()
-        animalsArrayBreed = mutableListOf<String>()
-        for((index, animal) in animals.withIndex()){
-            animalsArrayId.add(index, animal.id.toString())
-            animalsArrayName.add(index, animal.name)
-            animalsArrayAge.add(index, animal.age.toString())
-            animalsArrayBreed.add(index, animal.breed)
-        }
-        //creating custom ArrayAdapter
-        val animalsListAdapter = AnimalsListAdapter(this, animalsArrayName, animalsArrayAge, animalsArrayBreed)
-        recycler.adapter = animalsListAdapter
     }
 
     private fun viewRecords(){
+        val animals: List<AnimalModel> = getAnimalsFromDb()
+        dataProcessing(animals)
+        setDataToView()
+    }
+
+    private fun setDataToView() {
+        val animalsListAdapter =
+            AnimalsListAdapter(this, animalsArrayName, animalsArrayAge, animalsArrayBreed)
+        recycler.adapter = animalsListAdapter
+    }
+
+    private fun getAnimalsFromDb(): List<AnimalModel> {
         val databaseHandler: AnimalsDatabaseHandler = AnimalsDatabaseHandler(this)
         val animals: List<AnimalModel> = databaseHandler.readAllDataFromDb()
+        return animals
+    }
+
+    private fun dataProcessing(animals: List<AnimalModel>) {
         animalsArrayId = mutableListOf<String>()
         animalsArrayName = mutableListOf<String>()
         animalsArrayAge = mutableListOf<String>()
         animalsArrayBreed = mutableListOf<String>()
-        for((index, animal) in animals.withIndex()){
-            animalsArrayId.add(index, animal.id.toString())
+        for ((index, animal) in animals.withIndex()) {
+            animalsArrayId.add(index, animal.id)
             animalsArrayName.add(index, animal.name)
-            animalsArrayAge.add(index, animal.age.toString())
+            animalsArrayAge.add(index, animal.age)
             animalsArrayBreed.add(index, animal.breed)
         }
-        //creating custom ArrayAdapter
-        val animalsListAdapter = AnimalsListAdapter(this, animalsArrayName, animalsArrayAge, animalsArrayBreed)
-        recycler.adapter = animalsListAdapter
+    }
+
+    companion object {
+        private const val SORT_BY_NAME = "1"
+        private const val SORT_BY_AGE = "2"
+        private const val SORT_BY_BREED = "3"
     }
 }

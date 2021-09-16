@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_add_new_animal.*
 import tsarik.sergei.storage.db.AnimalModel
 import tsarik.sergei.storage.db.AnimalsDatabaseHandler
+import java.util.*
 
 class AddNewAnimalActivity : AppCompatActivity() {
 
@@ -19,9 +20,9 @@ class AddNewAnimalActivity : AppCompatActivity() {
             val animalAgeView: TextView = findViewById(R.id.newAnimalAge)
             val animalBreedView: TextView = findViewById(R.id.newAnimalBreed)
 
-            val animalName = animalNameView.text.toString()
+            val animalName = animalNameView.text.toString().lowercase(Locale.getDefault()).replaceFirstChar { it.uppercase() }
             val animalAge = animalAgeView.text.toString()
-            val animalBreed = animalBreedView.text.toString()
+            val animalBreed = animalBreedView.text.toString().lowercase(Locale.getDefault()).replaceFirstChar { it.uppercase() }
 
             var animal: AnimalModel = AnimalModel("0", animalName, animalAge, animalBreed)
 
